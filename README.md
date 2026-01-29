@@ -1,11 +1,6 @@
 ## EX. NO:2 IMPLEMENTATION OF PLAYFAIR CIPHER
 
- 
-
-## AIM:
- 
-
- 
+ ## AIM:
 
 To write a C program to implement the Playfair Substitution technique.
 
@@ -18,6 +13,7 @@ To encrypt a message, one would break the message into digrams (groups of 2 lett
 2.	If the letters appear on the same row of your table, replace them with the letters to their immediate right respectively
 3.	If the letters appear on the same column of your table, replace them with the letters immediately below respectively
 4.	If the letters are not on the same row or column, replace them with the letters on the same row respectively but at the other pair of corners of the rectangle defined by the original pair.
+
 ## EXAMPLE:
 ![image](https://github.com/Hemamanigandan/EX-NO-2-/assets/149653568/e6858d4f-b122-42ba-acdb-db18ec2e9675)
 
@@ -34,10 +30,93 @@ STEP-5: Display the obtained cipher text.
 
 
 
-Program:
+## Program:
+```
+def generate_key_matrix(key):
+    key = key.replace("J", "I").upper()
+    matrix = []
+    used = set()
+
+    for char in key:
+        if char.isalpha() and char not in used:
+            used.add(char)
+            matrix.append(char)
+
+    for char in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
+        if char not in used:
+            matrix.append(char)
+
+    return [matrix[i:i+5] for i in range(0, 25, 5)]
+
+
+def find_position(matrix, char):
+    for i in range(5):
+        for j in range(5):
+            if matrix[i][j] == char:
+                return i, j
+
+
+def prepare_text(text):
+    text = text.replace("J", "I").upper()
+    text = ''.join(filter(str.isalpha, text))
+
+    prepared = ""
+    i = 0
+
+    while i < len(text):
+        prepared += text[i]
+        if i + 1 < len(text) and text[i] == text[i+1]:
+            prepared += "X"
+            i += 1
+        elif i + 1 < len(text):
+            prepared += text[i+1]
+            i += 2
+        else:
+            prepared += "X"
+            i += 1
+
+    return prepared
+
+
+def encrypt(text, matrix):
+    result = ""
+
+    for i in range(0, len(text), 2):
+        r1, c1 = find_position(matrix, text[i])
+        r2, c2 = find_position(matrix, text[i+1])
+
+        if r1 == r2:
+            result += matrix[r1][(c1+1)%5]
+            result += matrix[r2][(c2+1)%5]
+
+        elif c1 == c2:
+            result += matrix[(r1+1)%5][c1]
+            result += matrix[(r2+1)%5][c2]
+
+        else:
+            result += matrix[r1][c2]
+            result += matrix[r2][c1]
+
+    return result
 
 
 
+key = input("Enter key: ")
+message = input("Enter message: ")
 
+matrix = generate_key_matrix(key)
+prepared = prepare_text(message)
+cipher = encrypt(prepared, matrix)
 
-Output:
+print("\nKey Matrix:")
+for row in matrix:
+    print(row)
+
+print("\nPrepared Text:", prepared)
+print("Encrypted Text:", cipher)
+```
+
+## Output:
+
+<img width="673" height="458" alt="image" src="https://github.com/user-attachments/assets/04dbc2c0-f9a8-4bea-a087-440730a8a213" />
+
