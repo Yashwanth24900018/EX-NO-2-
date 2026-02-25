@@ -117,6 +117,5 @@ print("Encrypted Text:", cipher)
 ```
 
 ## Output:
-
-<img width="673" height="458" alt="image" src="https://github.com/user-attachments/assets/04dbc2c0-f9a8-4bea-a087-440730a8a213" />
+[exp2.pdf](https://github.com/user-attachments/files/25535503/exp2.pdf)
 
